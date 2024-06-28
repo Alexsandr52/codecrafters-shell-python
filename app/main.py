@@ -1,7 +1,9 @@
 import sys
 
 def main():
-    # Uncomment this block to pass the first stage
+    PATH = os.environ.get("PATH")
+    builtin_commands = ["echo", "exit", "type"]
+
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
@@ -22,10 +24,20 @@ def echo(input):
     print(input)
 
 def type_command(command):
-    if command in ["echo", "exit", "type"]:
-        print(f"{command} is a shell builtin")
+    
+    command_path = None
+    paths = PATH.split(":")
+    
+    for path in paths:
+        if os.path.isfile(f"{path}/{command}"):
+            command_path = f"{path}/{command}"
+    
+    if command in builtin_commands:
+        sys.stdout.write(f"{command} is a shell builtin\n")
+    elif command_path:
+        sys.stdout.write(f"{command} is {command_path}\n")
     else:
-        print(f"{command} not found")
+        sys.stdout.write(f"{command} not found\n")
 
 if __name__ == "__main__":
     main()
