@@ -14,7 +14,7 @@ def handle_input(user_argument):
                     sys.stdout.write(f"{user_argument.split(" ")[1]} is {path}/{user_argument.split(" ")[1]}\n")
                     break
             else:
-                sys.stdout.write(f"{user_argument.split(" ")[1]} not found\n")
+                sys.stdout.write(f"{user_argument.split(" ")[1]}: not found\n")
 
     elif user_argument == "exit 0":
         return False
