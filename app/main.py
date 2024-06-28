@@ -34,7 +34,7 @@ def handle_pwd(args):
 
 def handle_cd(args):
     try:
-        os.chdir(" ".join(args[1:]))
+        os.chdir(" ".join(args))
     except FileNotFoundError:
         print(" ".join(args) + ": No such file or directory")
 
