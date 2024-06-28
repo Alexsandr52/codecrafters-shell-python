@@ -4,8 +4,6 @@ import sys
 
 from typing import Optional
 
-current_dir = os.getcwd()
-
 def locate_executable(command) -> Optional[str]:
     path = os.environ.get("PATH", "")
 
@@ -30,7 +28,7 @@ def handle_type(args):
         print(f"{args[0]}: not found")
 
 def handle_pwd(args):
-    print(current_dir)
+    os.getcwd()
 
 def handle_cd(args):
     try:
