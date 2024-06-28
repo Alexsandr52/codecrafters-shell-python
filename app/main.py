@@ -1,45 +1,41 @@
-import sys
 import os
+import sys
+
+builtin_commands = ["exit", "echo", "type"]
+
+def handle_input(user_argument):
+    if "type" == user_argument.split(" ")[0]:
+        if user_argument.split(" ")[1] in builtin_commands:
+            sys.stdout.write(f"{user_argument.split(" ")[1]} is a shell builtin\n")
+        else:
+            paths = os.getenv("PATH").split(":")
+            for path in paths:
+                if os.path.exists(f"{path}/{user_argument.split(" ")[1]}"):
+                    sys.stdout.write(f"{user_argument.split(" ")[1]} is {path}/{user_argument.split(" ")[1]}\n")
+                    break
+            else:
+                sys.stdout.write(f"{user_argument.split(" ")[1]} not found\n")
+
+    elif user_argument == "exit 0":
+        return False
+    elif "echo" == user_argument.split(" ")[0]:
+        sys.stdout.write(f"{user_argument.replace("echo", "")}\n")
+    else:
+        sys.stderr.write(f"{user_argument}: command not found\n")
+        sys.stdout.flush()
+
 
 def main():
-    PATH = os.environ.get("PATH")
-    builtin_commands = ["echo", "exit", "type"]
 
+    # Wait for user input
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
+        user_argument = input()
+        handle_response = handle_input(user_argument)
+        if handle_response == False:
+            break
 
-        # Wait for user input
-        user_input = input().split()
-        try:
-            print(PATH)
-            if user_input[0] == "exit" and user_input[1] == "0": break
-            elif user_input[0] == "echo": print(" ".join(user_input[1:]))
-            elif user_input[0] == 'type' and len(user_input) > 1: type_command(user_input[1]) 
-            else: undefined_command(user_input[0])
-        except Exception as e: 
-            undefined_command(user_input[0])
-    
-def undefined_command(command):
-    print(f"{command}: command not found")
-
-def echo(input):
-    print(input)
-
-def type_command(command):
-    command_path = None
-    paths = PATH.split(":")
-    
-    for path in paths:
-        if os.path.isfile(f"{path}/{command}"):
-            command_path = f"{path}/{command}"
-    
-    if command in builtin_commands:
-        print(f"{command} is a shell builtin\n")
-    elif command_path:
-        print(f"{command} is {command_path}\n")
-    else:
-        print(f"{command} not found\n")
 
 if __name__ == "__main__":
     main()
