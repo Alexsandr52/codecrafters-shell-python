@@ -9,7 +9,7 @@ def main():
 
         # Wait for user input
         user_input = input()
-        if user_input.split()[0] == 'exsit' and user_input.split()[1] == '0': break
+        if user_input.split()[0] == 'exit' and user_input.split()[1] == '0': break
         undefined_command(user_input)
     
 def undefined_command(command):
