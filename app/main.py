@@ -31,11 +31,12 @@ def handle_pwd(args):
     print(os.getcwd())
 
 def handle_cd(args):
-    if args[0] == "~":
-        home_path = os.environ.get("HOME")
-        os.chdir(home_path)
     try:
-        os.chdir(" ".join(args))
+        if args[0] == "~":
+            home_path = os.environ.get("HOME")
+            os.chdir(home_path)
+        else:
+            os.chdir(" ".join(args))
     except FileNotFoundError:
         print(" ".join(args) + ": No such file or directory")
 
