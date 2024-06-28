@@ -8,10 +8,12 @@ def main():
         sys.stdout.flush()
 
         # Wait for user input
-        undefined_command(input())
+        user_input = input()
+        if user_input.split()[0] == 'exsit', user_input.split()[1] == '0': break
+        undefined_command(user_input)
     
 def undefined_command(command):
-    print(f"{command}: command not found")
+    print(f"{command}: command not found")11
 
 if __name__ == "__main__":
     main()
