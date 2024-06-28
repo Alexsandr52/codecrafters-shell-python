@@ -1,40 +1,60 @@
 import os
+import subprocess
 import sys
 
-builtin_commands = ["exit", "echo", "type"]
+from typing import Optional
 
-def handle_input(user_argument):
-    if "type" == user_argument.split(" ")[0]:
-        if user_argument.split(" ")[1] in builtin_commands:
-            sys.stdout.write(f"{user_argument.split(" ")[1]} is a shell builtin\n")
-        else:
-            paths = os.getenv("PATH").split(":")
-            for path in paths:
-                if os.path.exists(f"{path}/{user_argument.split(" ")[1]}"):
-                    sys.stdout.write(f"{user_argument.split(" ")[1]} is {path}/{user_argument.split(" ")[1]}\n")
-                    break
-            else:
-                sys.stdout.write(f"{user_argument.split(" ")[1]}: not found\n")
 
-    elif user_argument == "exit 0":
-        return False
-    elif "echo" == user_argument.split(" ")[0]:
-        sys.stdout.write(f"{user_argument.replace("echo ", "")}\n")
+def locate_executable(command) -> Optional[str]:
+    path = os.environ.get("PATH", "")
+
+    for directory in path.split(":"):
+        file_path = os.path.join(directory, command)
+
+        if os.path.isfile(file_path) and os.access(file_path, os.X_OK):
+            return file_path
+
+
+def handle_exit(args):
+    sys.exit(int(args[0]) if args else 0)
+
+
+def handle_echo(args):
+    print(" ".join(args))
+
+
+def handle_type(args):
+    if args[0] in builtins:
+        print(f"{args[0]} is a shell builtin")
+    elif executable := locate_executable(args[0]):
+        print(f"{args[0]} is {executable}")
     else:
-        sys.stderr.write(f"{user_argument}: command not found\n")
-        sys.stdout.flush()
+        print(f"{args[0]} not found")
+
+
+builtins = {
+    "exit": handle_exit,
+    "echo": handle_echo,
+    "type": handle_type,
+}
 
 
 def main():
-
-    # Wait for user input
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
-        user_argument = input()
-        handle_response = handle_input(user_argument)
-        if handle_response == False:
-            break
+
+        command, *args = input().split(" ")
+
+        if command in builtins:
+            builtins[command](args)
+            continue
+        elif executable := locate_executable(command):
+            subprocess.run([executable, *args])
+        else:
+            print(f"{command}: command not found")
+
+        sys.stdout.flush()
 
 
 if __name__ == "__main__":
