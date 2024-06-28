@@ -28,7 +28,7 @@ def handle_type(args):
         print(f"{args[0]}: not found")
 
 def handle_pwd(args):
-    os.getcwd()
+    print(os.getcwd())
 
 def handle_cd(args):
     try:
