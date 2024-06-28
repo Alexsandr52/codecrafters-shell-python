@@ -9,11 +9,11 @@ def main():
 
         # Wait for user input
         user_input = input()
-        if user_input.split()[0] == 'exsit', user_input.split()[1] == '0': break
+        if user_input.split()[0] == 'exsit' and user_input.split()[1] == '0': break
         undefined_command(user_input)
     
 def undefined_command(command):
-    print(f"{command}: command not found")11
+    print(f"{command}: command not found")
 
 if __name__ == "__main__":
     main()
