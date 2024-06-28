@@ -31,11 +31,14 @@ def handle_type(args):
     else:
         print(f"{args[0]}: not found")
 
+def handle_pwd(args):
+    print(os.getcwd())
 
 builtins = {
     "exit": handle_exit,
     "echo": handle_echo,
     "type": handle_type,
+    "pwd": handle_pwd
 }
 
 
