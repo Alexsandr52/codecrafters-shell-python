@@ -4,6 +4,7 @@ import sys
 
 from typing import Optional
 
+current_dir = os.getcwd()
 
 def locate_executable(command) -> Optional[str]:
     path = os.environ.get("PATH", "")
@@ -14,14 +15,11 @@ def locate_executable(command) -> Optional[str]:
         if os.path.isfile(file_path) and os.access(file_path, os.X_OK):
             return file_path
 
-
 def handle_exit(args):
     sys.exit(int(args[0]) if args else 0)
 
-
 def handle_echo(args):
     print(" ".join(args))
-
 
 def handle_type(args):
     if args[0] in builtins:
@@ -32,13 +30,20 @@ def handle_type(args):
         print(f"{args[0]}: not found")
 
 def handle_pwd(args):
-    print(os.getcwd())
+    print(current_dir)
+
+def handle_cd(args):
+    try:
+        os.chdir(" ".join(args[1:]))
+    except FileNotFoundError:
+        print(" ".join(args) + ": No such file or directory")
 
 builtins = {
     "exit": handle_exit,
     "echo": handle_echo,
     "type": handle_type,
-    "pwd": handle_pwd
+    "pwd": handle_pwd,
+    "cd": handle_cd
 }
 
 
